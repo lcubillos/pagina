@@ -1,0 +1,77 @@
+# Javascript Node CircleCI 2.0 configuration file
+#
+# Check https://circleci.com/docs/2.0/language-javascript/ for more details
+#
+version: 2
+jobs:
+  build:
+    docker:
+      # specify the version you desire here
+      - image: circleci/php:7.2-node-browsers
+      
+      # Specify service dependencies here if necessary
+      # CircleCI maintains a library of pre-built images
+      # documented at https://circleci.com/docs/2.0/circleci-images/
+      # - image: circleci/mongo:3.4.4
+
+    working_directory: ~/project
+
+    steps:
+      - checkout
+      #LOG THE CURRENT BRANCH
+      - run:
+          name: Show current branch
+          command: echo ${CIRCLE_BRANCH}
+      # Download and cache dependencies 
+      - restore_cache:
+          keys:
+          - v1-dependencies-{{ checksum "package.json" }}
+          # fallback to using the latest cache if no exact match is found
+          - v1-dependencies-
+
+      - run:    
+          name: Install local dependencies
+          command: npm install
+
+      - run: yarn install
+
+      - save_cache:
+          paths:
+            - node_modules
+          key: v1-dependencies-{{ checksum "package.json" }}
+      # run tests!
+      #- run: yarn test
+
+
+  deploy:
+   working_directory: ~/project
+   docker:
+       - image: circleci/php:7.2-node-browsers
+   steps:
+      - checkout
+      - run:
+          name: show current branch
+          command: echo ${CIRCLE_BRANCH}
+      - run:
+          name: installing python-pip and aws cli
+          working_directory: /
+          command: |
+            sudo apt-get -y -qq update
+            sudo apt-get install python-pip python-dev build-essential
+            sudo pip install --upgrade "urllib3==1.22" awscli awsebcli
+      - run: 
+          name: Deploy on AWS EB
+          command: |
+                  eb deploy   
+
+workflows:
+  version: 2
+  build-and-deploy:
+    jobs:
+      - build
+      - deploy:
+          requires:
+            - build
+          filters:
+            branches:
+              only: master

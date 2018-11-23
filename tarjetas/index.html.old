@@ -1,0 +1,17 @@
+<html lang="en"><head>
+    <meta charset="utf-8">
+    <title>Vendomática</title>
+    <base href="./">
+    <style type="text/css">
+     p {
+    font-family: Arial, Helvetica, sans-serif;
+}
+    </style>
+    <center>
+      <div><img src="http://vendomatica.cl/images/logo.png"></div>
+      <div><img src="http://www.ucentral.cl/prontus_ucentral2012/site/artic/20150121/imag/foto_0000000120150121112455.gif"></div>
+      <div><p>Si necesita realizar alguna solicitud de manera urgente, favor contactar a <a href="mailto:tarjetas@vendomatica.cl">tarjetas@vendomatica.cl</a></p></div>
+    </center>
+</head>
+<body></body>
+</html>
